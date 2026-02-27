@@ -1,0 +1,20 @@
+# 🔐 CREDENCIALES DE ACCESO REMOTO RP4 (Mantener Privado)
+# Llenar este archivo con los datos de Tailscale para soporte remoto.
+
+[CONEXION]
+# La IP de Tailscale de la Raspberry Pi (ej: 100.x.y.z)
+TARGET_IP=100.90.101.54
+
+# Usuario SSH (ej: pi)
+SSH_USER= toto
+
+# Contraseña SSH o Key Path
+SSH_PASS= Chile5235
+
+# Puerto (por defecto 22)
+SSH_PORT=22
+
+[NOTAS]
+# Aquí puedes poner instrucciones extra, por ejemplo:
+# "El servicio se llama centinela.service"
+# "La carpeta está en /home/pi/centinela_bot"

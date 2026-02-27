@@ -1,0 +1,10 @@
+# 🦅 CREDENCIALES DE TELEGRAM BOT
+# Necesitamos estos datos para que el Centinela pueda hablarte.
+
+[TELEGRAM]
+# 1. Crea un bot con @BotFather y pega el token aquí:
+TELEGRAM_TOKEN=8492700577:AAFADXegFvwkqJkPyjqEVRv-xbeQCiGmwPU
+
+# 2. Obtén tu ID numérico enviando /start a @userinfobot y pégalo aquí:
+# (Esto es para que el bot SOLO te responda a ti)
+ALLOWED_USER_ID=591656980

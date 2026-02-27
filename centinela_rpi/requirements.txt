@@ -1,0 +1,7 @@
+python-telegram-bot[job-queue]>=20.0
+python-dotenv
+psutil
+schedule
+requests
+scapy
+opencv-python-headless

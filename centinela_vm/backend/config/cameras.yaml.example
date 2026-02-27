@@ -1,0 +1,15 @@
+cameras:
+  - id: "cam_entrada"
+    name: "Entrada Principal"
+    source: "rtsp://admin:password@192.168.1.10:554/Streaming/Channels/101"
+    enabled: true
+    roi: [0, 0, 1920, 1080] # Region of Interest (Optional)
+
+  - id: "cam_patio"
+    name: "Patio Trasero"
+    source: "rtsp://admin:code@192.168.1.11:554/H.264"
+    enabled: true
+
+settings:
+  reconnect_interval: 10 # Seconds
+  buffer_size: 1

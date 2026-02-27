@@ -1,0 +1,23 @@
+# Entornos Virtuales y Dependencias
+venv/
+node_modules/
+dist/
+.env
+
+# Archivos de Sistema y Temporales
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+logs/
+
+# Archivos Pesados o Backups
+*.tar
+*.zip
+*.rar
+backup/
+
+# Archivos de configuración de IDE
+.vscode/
+.idea/
+*.swp

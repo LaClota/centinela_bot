@@ -1,0 +1,19 @@
+# 🔐 CREDENCIALES DE LA MÁQUINA VIRTUAL (VM - DEBIAN) NO PUBLICAR EN NINGUN LADO
+# Llenar este archivo con los datos de acceso para la VM.
+
+[CONEXION]
+# La IP de la VM (Local o Tailscale)
+VM_IP= 100.119.235.64
+
+# Usuario SSH (ej: root, usuario)
+SSH_USER= centinela
+
+# Contraseña SSH
+SSH_PASS= Chile5235
+
+# Puerto (por defecto 22)
+SSH_PORT=22
+
+[NOTAS]
+# Opcional: Ruta absoluta donde clonar el repo en la VM
+# TARGET_DIR=/home/usuario/centinela_vm

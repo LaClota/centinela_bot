@@ -1,0 +1,15 @@
+[Unit]
+Description=Centinela Security Backend (FastAPI + YOLO)
+After=network.target
+
+[Service]
+User=centinela
+WorkingDirectory=/home/centinela/centinela_bot/centinela_vm/backend
+ExecStart=/home/centinela/centinela_bot/centinela_vm/backend/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8000
+Restart=always
+RestartSec=10
+EnvironmentFile=/home/centinela/centinela_bot/centinela_vm/backend/.env
+Environment=PYTHONPATH=/home/centinela/centinela_bot/centinela_vm/backend
+
+[Install]
+WantedBy=multi-user.target
