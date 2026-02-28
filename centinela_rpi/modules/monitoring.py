@@ -20,14 +20,43 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Disco (Root)
     disk = psutil.disk_usage('/')
     
-    # Temperatura (Solo funciona en Linux/RPi, try/except para dev en Windows)
+    # Temperatura (Soporte RPi y PC x86 + GPU AMD)
     temp_msg = "N/A"
     try:
         temps = psutil.sensors_temperatures()
-        if 'cpu_thermal' in temps:
+        if 'coretemp' in temps: # Intel CPU
+            temp_msg = f"{temps['coretemp'][0].current}°C"
+        elif 'k10temp' in temps: # AMD CPU
+            temp_msg = f"{temps['k10temp'][0].current}°C"
+        elif 'cpu_thermal' in temps: # Raspberry Pi
             temp_msg = f"{temps['cpu_thermal'][0].current}°C"
-    except Exception:
-        temp_msg = "No disponible (Windows/Err)"
+        elif 'acpitz' in temps: # ACPI Generic
+            temp_msg = f"{temps['acpitz'][0].current}°C"
+            
+        # Añadir disco NVMe si existe
+        if 'nvme' in temps:
+            temp_msg += f" | NVMe: {temps['nvme'][0].current}°C"
+            
+        # Añadir GPU si existe
+        if 'amdgpu' in temps:
+            try:
+                # Buscar el sensor 'edge' o el primero válido
+                gpu_temp = None
+                for sensor_data in temps['amdgpu']:
+                    if sensor_data.label == 'edge':
+                        gpu_temp = getattr(sensor_data, 'current', None)
+                        break
+                if gpu_temp is None and temps['amdgpu']:
+                    gpu_temp = getattr(temps['amdgpu'][0], 'current', None)
+                
+                if gpu_temp is not None and gpu_temp > 0:
+                    temp_msg += f"\n🎮 *GPU (RX580):* {gpu_temp}°C"
+                else:
+                    temp_msg += f"\n🎮 *GPU (RX580):* N/A (Reposo)"
+            except Exception as e:
+                temp_msg += f"\n🎮 *GPU (RX580):* Err"
+    except Exception as e:
+        temp_msg = f"N/A (Error: {e})"
 
     # Red (IP de Tailscale prioritaria)
     ip_tailscale = "No detectada"

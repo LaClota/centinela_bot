@@ -1,0 +1,18 @@
+[Unit]
+Description=Centinela Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=centinela
+WorkingDirectory=/home/centinela/centinela_rpi
+ExecStart=/usr/bin/python3 /home/centinela/centinela_rpi/main.py
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/centinela/bot.log
+StandardError=append:/home/centinela/bot.log
+AmbientCapabilities=CAP_NET_RAW
+CapabilityBoundingSet=CAP_NET_RAW
+
+[Install]
+WantedBy=multi-user.target

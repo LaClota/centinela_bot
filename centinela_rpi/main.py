@@ -51,6 +51,18 @@ async def post_init(application: ApplicationBuilder):
     except Exception as e:
         logger.error(f"No se pudo enviar mensaje de inicio: {e}")
 
+from telegram.ext import MessageHandler, filters
+
+@auth_required
+async def handle_text_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Intercepta los botones legacy (Temperatura, Disco) y devuelve el status"""
+    text = update.message.text.lower()
+    if "temperatura" in text or "disco" in text or "estado" in text:
+        await status(update, context)
+    else:
+        # Comando desconocido o texto suelto
+        pass
+
 def main():
     if not TELEGRAM_TOKEN:
         logger.error("Error: TELEGRAM_TOKEN no encontrado. Revisa tu .env")
@@ -67,6 +79,9 @@ def main():
     application.add_handler(CommandHandler("scan", scan_network_command))
     application.add_handler(CommandHandler("snap", get_snapshot_command))
     application.add_handler(CommandHandler("sensors", sensors_status))
+    
+    # Text handler para botones viejos
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_text_buttons))
 
     # Job Queue (Watchdog) - Requiere python-telegram-bot[job-queue]
     job_queue = application.job_queue

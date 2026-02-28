@@ -1,0 +1,17 @@
+[Unit]
+Description=Centinela Frontend (Vite)
+After=network.target
+
+[Service]
+Type=simple
+User=centinela
+WorkingDirectory=/home/centinela/centinela_vm/frontend
+Environment=PATH=/usr/bin:/usr/local/bin
+ExecStart=/usr/bin/npm run dev -- --host 0.0.0.0
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/centinela/frontend.log
+StandardError=append:/home/centinela/frontend.log
+
+[Install]
+WantedBy=multi-user.target
