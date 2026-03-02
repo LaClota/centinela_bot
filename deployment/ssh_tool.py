@@ -50,7 +50,7 @@ def upload_file(host, user, password, local_path, remote_path):
 
 if __name__ == "__main__":
     action = sys.argv[1]
-    host = '100.127.19.45'
+    host = '100.114.60.87'
     user = 'centinela'
     pwd = 'Chile5235'
     

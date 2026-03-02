@@ -1,7 +1,7 @@
 import os
 from ssh_tool import upload_file, run_remote_command
 
-host = '100.127.19.45'
+host = '100.114.60.87'
 user = 'centinela'
 pwd = 'Chile5235'
 
