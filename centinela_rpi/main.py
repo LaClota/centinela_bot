@@ -103,7 +103,20 @@ async def handle_text_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE
         await status(update, context)
     else:
         # Comando desconocido o texto suelto
-        pass
+        now = datetime.datetime.now()
+        is_working_hours = False
+        if now.weekday() < 5:
+            ar_holidays = holidays.AR(years=now.year)
+            if now.date() not in ar_holidays:
+                start_time = datetime.time(8, 0)
+                end_time = datetime.time(18, 30)
+                if start_time <= now.time() <= end_time:
+                    is_working_hours = True
+                    
+        if is_working_hours:
+            await update.message.reply_text("🤫 Estoy activo, pero en silencio (modo horario laboral).\n\nPuedes usar /status, /sensors o /help si precisas un reporte.")
+        else:
+            await update.message.reply_text("🤖 Comando no reconocido.\nUsa /help para ver las opciones disponibles.")
 
 def main():
     if not TELEGRAM_TOKEN:
