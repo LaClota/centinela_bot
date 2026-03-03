@@ -5,3 +5,5 @@ schedule
 requests
 scapy
 opencv-python-headless
+PyYAML
+holidays

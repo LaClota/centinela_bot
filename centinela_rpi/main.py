@@ -1,5 +1,7 @@
 import logging
 import os
+import datetime
+import holidays
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from config.settings import TELEGRAM_TOKEN, LOG_LEVEL, ALLOWED_USER_ID
@@ -30,15 +32,55 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("🏓 Pong! Sistema en línea y seguro.")
 
-# --- Watchdog (Background Task placeholder) --- #
+from core.sensors import sensor_manager
+
 async def watchdog_job(context: ContextTypes.DEFAULT_TYPE):
     """
     Tarea periódica para chequear alertas críticas.
-    Aquí iría la lógica de revisar sensores GPIO o alertas de cámaras.
+    Detecta cambios en los sensores (Online/Offline o Apertura/Cierre).
     """
-    # Ejemplo: Si la temperatura sube de X, mandar alerta.
-    # Por ahora es solo un placeholder silencioso.
-    pass
+    try:
+        changed_sensors = await sensor_manager.update_all()
+        if not changed_sensors:
+            return
+            
+        now = datetime.datetime.now()
+        is_working_hours = False
+        
+        # Check if it's weekday (0=Monday, 6=Sunday)
+        if now.weekday() < 5:
+            ar_holidays = holidays.AR(years=now.year)
+            if now.date() not in ar_holidays:
+                start_time = datetime.time(8, 0)
+                end_time = datetime.time(18, 30)
+                if start_time <= now.time() <= end_time:
+                    is_working_hours = True
+                    
+        for sensor in changed_sensors:
+            if is_working_hours:
+                logger.info(f"Omitiendo alerta para {sensor.name} por horario laboral (Lunes a Viernes de 8:00 a 18:30 no feriado)")
+                continue
+                
+            icon = "🚨" if sensor.status == "online" else "⚠️"
+            status_text = "CONECTADO / CERRADO" if sensor.status == "online" else "DESCONECTADO / ABIERTO"
+            
+            alert_msg = (
+                f"{icon} *ALERTA DE SEGURIDAD*\n"
+                f"━━━━━━━━━━━━━━━━━━━━\n"
+                f"Sujeto: *{sensor.name}*\n"
+                f"Estado: `{status_text}`\n"
+                f"IP: `{sensor.ip}`"
+            )
+            
+            await context.bot.send_message(
+                chat_id=ALLOWED_USER_ID,
+                text=alert_msg,
+                parse_mode='Markdown'
+            )
+            logger.info(f"Alerta enviada para {sensor.name}: {sensor.status}")
+            
+    except Exception as e:
+        logger.error(f"Error en watchdog: {e}")
 
 async def post_init(application: ApplicationBuilder):
     """Callback que se ejecuta cuando el bot inicia correctamente."""
